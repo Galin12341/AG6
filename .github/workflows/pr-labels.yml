@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 0
 
       - name: Label by file changes
-        uses: actions/labeler@v5
+        uses: actions/labeler@v6
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           configuration-path: .github/labeler.yml
