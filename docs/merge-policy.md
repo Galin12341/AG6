@@ -6,6 +6,6 @@
 
 禁止：任何人直接 push main。
 
-回滾策略：以 PR 聚合的單點 commit（squash 的那顆）做 revert；跨多 PR 的出錯，優先逐 PR 回滾，避免大範圍 revert。
+回滾策略：以 PR 聚合的單點 commit 做 revert；跨多 PR 的出錯，優先逐 PR 回滾，避免大範圍 revert。
 
 審核重點：PR 必須綠（CI 全過）、至少 1 人 review 才能合併。
