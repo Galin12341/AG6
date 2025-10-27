@@ -1,0 +1,58 @@
+name: PR Auto-Label
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  auto-label:
+    name: Auto Label PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Label by file changes
+        uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+
+      - name: Label by PR size
+        run: |
+          CHANGES=$(git diff --numstat origin/${{ github.base_ref }}...HEAD | awk '{s+=$1+$2} END {print s}')
+
+          if [ "$CHANGES" -lt 50 ]; then
+            echo "size/small" >> labels.txt
+          elif [ "$CHANGES" -lt 200 ]; then
+            echo "size/medium" >> labels.txt
+          else
+            echo "size/large" >> labels.txt
+          fi
+
+      - name: Label by type
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+
+          if [[ "$PR_TITLE" =~ ^feat ]]; then
+            echo "type/feature" >> labels.txt
+          elif [[ "$PR_TITLE" =~ ^fix ]]; then
+            echo "type/bugfix" >> labels.txt
+          elif [[ "$PR_TITLE" =~ ^docs ]]; then
+            echo "type/documentation" >> labels.txt
+          elif [[ "$PR_TITLE" =~ ^refactor ]]; then
+            echo "type/refactor" >> labels.txt
+          elif [[ "$PR_TITLE" =~ ^test ]]; then
+            echo "type/test" >> labels.txt
+          fi
+
+      - name: Check if tests added
+        run: |
+          if git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -q "test_"; then
+            echo "includes-tests" >> labels.txt
+          else
+            echo "needs-tests" >> labels.txt
+          fi

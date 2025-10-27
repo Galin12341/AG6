@@ -1,0 +1,22 @@
+# Auto-labeler configuration for PR file changes
+
+'area/src':
+  - 'src/**/*'
+
+'area/tests':
+  - 'tests/**/*'
+  - 'test_*.py'
+
+'area/docs':
+  - '*.md'
+  - 'docs/**/*'
+
+'area/ci':
+  - '.github/**/*'
+  - '.gitlab-ci.yml'
+  - 'azure-pipelines.yml'
+
+'area/git':
+  - '.git*'
+  - '*.sh'
+  - 'GIT_*.md'
